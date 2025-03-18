@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Dog\Application\Command;
+namespace App\Dog\Application\IntegrationEvent;
 
 use Symfony\Component\Uid\Ulid;
 
-class BarkAtCatCommand
+class DogBarkedAtCatIntegrationEvent
 {
     public function __construct(
         public Ulid $dogId,

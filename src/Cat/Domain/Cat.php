@@ -2,9 +2,10 @@
 
 namespace App\Cat\Domain;
 
+use App\Shared\Domain\AggregateRoot;
 use Symfony\Component\Uid\Ulid;
 
-class Cat
+class Cat extends AggregateRoot
 {
     private Ulid $id;
     private string $name;
@@ -35,5 +36,10 @@ class Cat
     public function id(): Ulid
     {
         return $this->id;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
     }
 }

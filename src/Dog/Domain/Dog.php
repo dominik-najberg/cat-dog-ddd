@@ -2,38 +2,27 @@
 
 namespace App\Dog\Domain;
 
+use App\Dog\Domain\Event\DogBarkedAtCatEvent;
+use App\Dog\Domain\Event\DogCreated;
+use App\Shared\Domain\AggregateRoot;
 use Symfony\Component\Uid\Ulid;
-use Doctrine\ORM\Mapping as ORM;
 
-class Dog
+class Dog extends AggregateRoot
 {
-    private Ulid $id;
-    private string $name;
-    private bool $isNeutered = false;
-
-    private function __construct(Ulid $id, string $name)
+    private function __construct(private Ulid $id, private string $name)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->isNeutered = false;
     }
 
     public static function create(Ulid $id, string $name): self
     {
-        return new self($id, $name);
+        $dog = new self($id, $name);
+        $dog->raiseDomainEvent(new DogCreated($dog->id, $dog->name));
+        return $dog;
     }
 
-    public function barkAtCat(Ulid $catId): DogBarkedAtCatEvent
+    public function barkAtCat(Ulid $catId): void
     {
-        return new DogBarkedAtCatEvent($this->id, $catId);
-    }
-
-    public function neuter(): void
-    {
-        if ($this->isNeutered) {
-            throw new \RuntimeException('Dog is already neutered.');
-        }
-        $this->isNeutered = true;
+        $this->raiseDomainEvent(new DogBarkedAtCatEvent($this->id, $catId));
     }
 
     public function id(): Ulid
@@ -44,10 +33,5 @@ class Dog
     public function name(): string
     {
         return $this->name;
-    }
-
-    public function isNeutered(): bool
-    {
-        return $this->isNeutered;
     }
 }
