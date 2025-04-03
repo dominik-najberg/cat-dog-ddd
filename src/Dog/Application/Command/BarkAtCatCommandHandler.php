@@ -7,7 +7,7 @@ use App\Shared\Application\Service\EventBus;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class BarkAtCatCommandHandler
+readonly class BarkAtCatCommandHandler
 {
     public function __construct(
         private DogRepository $dogRepository,
